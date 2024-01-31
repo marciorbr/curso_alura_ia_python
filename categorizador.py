@@ -5,6 +5,31 @@ import os
 load_dotenv()
 
 cliente = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+modelo = 'gpt-4'
+
+prompt_sistema = f"""
+        Você é um categorizador de produtos.
+        Você deve assumir as categorias presentes na lista abaixo.
+
+        # Lista de Categorias Válidas
+            - Moda Sustentável
+            - Produtos para o Lar
+            - Beleza Natural
+            - Eletrônicos Verdes
+            - Higiene Pessoal
+
+        # Formato da Saída
+        Produto: Nome do Produto
+        Categoria: apresente a categoria do produto
+
+        # Exemplo de Saída
+        Produto: Escova elétrica com recarga solar
+        Categoria: Eletrônicos Verdes
+    """
+
+prompt_usuario = input("Apresente o nome de um produto: ")
+
+
 
 """
 O que esse categorizador vai fazer? Assumiremos que temos o seguinte problema: 
@@ -16,22 +41,16 @@ resposta = cliente.chat.completions.create(
         messages=[
                 {
                         "role":"system",
-                        "content": """
-                        Classifique o produto abaixo em uma das categorias: Higiene 
-                        Pessoal, Moda ou Casa e de uma descrição da categoria.
-                        """
+                        "content": prompt_sistema
                 },
                 {
                         "role" : "user",
-                        "content": """
-                        Escova de dentes de bambu
-                        """
+                        "content": prompt_usuario
                 }
         ],
-        model="gpt-4",
+        model=modelo,
         temperature=0,
         max_tokens=200,
-        n = 2,
 )
 
-[print(resposta.choices[cont].message.content) for cont in range(0, len(resposta.choices))]
+print(resposta.choices[0].message.content)
