@@ -3,3 +3,4 @@ python-dotenv==1.0.1
 pydub==0.25.1
 instabot==0.117.0
 Pillow==9.0.1
+tiktoken==0.5.2
